@@ -22,12 +22,27 @@ ament_target_dependencies(static_turtle_tf2_broadcaster
   tf2_ros
   turtlesim
 )
+add_executable(turtle_tf2_broadcaster src/turtle_tf2_broadcaster.cpp)
+ament_target_dependencies(turtle_tf2_broadcaster
+  geometry_msgs
+  rclcpp
+  tf2
+  tf2_ros
+  turtlesim
+)
 # My install targets
 install(TARGETS
   static_turtle_tf2_broadcaster
   DESTINATION lib/${PROJECT_NAME}
 )
-
+install(TARGETS
+  turtle_tf2_broadcaster
+  DESTINATION lib/${PROJECT_NAME}
+)
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}
+)
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
