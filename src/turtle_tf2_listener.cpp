@@ -73,12 +73,15 @@ private:
         // Create a TransformStamped message
         geometry_msgs::msg::TransformStamped t;
 
+        // Get the current time
+        rclcpp::Time now = this->get_clock()->now();
         // Look up for the transformation between target_frame and turtle2 frames
-        // at time tf2::TimePointZero (latest available)
+        // at time tf2::TimePointZero (latest available) with a 50ms timeout duration
         try {
           t = tf_buffer_->lookupTransform(
             toFrameRel, fromFrameRel,
-            tf2::TimePointZero);
+            now,
+            50ms);
         } catch (const tf2::TransformException & ex) {
           // Handle exceptions
           RCLCPP_INFO(
