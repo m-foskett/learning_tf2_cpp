@@ -75,13 +75,21 @@ private:
 
         // Get the current time
         rclcpp::Time now = this->get_clock()->now();
-        // Look up for the transformation between target_frame and turtle2 frames
-        // at time tf2::TimePointZero (latest available) with a 50ms timeout duration
+        // Get the time to transform the data from
+        rclcpp::Time when = now - rclcpp::Duration(5, 0);
+        // tf2 performs the following steps:
+        // 1. Compute the transform from the source frame to the fixed frame in the past
+        // 2. In the fixed frame, time travel from the past to now
+        // 3. Compute the transform from the fixed frame to the target frame
         try {
           t = tf_buffer_->lookupTransform(
-            toFrameRel, fromFrameRel,
-            now,
-            50ms);
+            toFrameRel, // Target frame
+            now, // The time to transform the data to
+            fromFrameRel, // The source frame to transform the data from
+            when, // The time at which the source frame will be evaluated 
+            "world", // Fixed frame (doesn't change over time)
+            50ms // Timeout duration to wait for the transform to become available
+          );
         } catch (const tf2::TransformException & ex) {
           // Handle exceptions
           RCLCPP_INFO(
