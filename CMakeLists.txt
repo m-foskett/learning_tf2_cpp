@@ -12,6 +12,8 @@ find_package(rclcpp REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(turtlesim REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+find_package(message_filters REQUIRED)
 
 # My executables
 add_executable(static_turtle_tf2_broadcaster src/static_turtle_tf2_broadcaster.cpp)
@@ -44,6 +46,16 @@ ament_target_dependencies(turtle_tf2_message_broadcaster
   rclcpp
   turtlesim
 )
+add_executable(turtle_tf2_message_filter src/turtle_tf2_message_filter.cpp)
+ament_target_dependencies(
+  turtle_tf2_message_filter
+  geometry_msgs
+  message_filters
+  rclcpp
+  tf2
+  tf2_geometry_msgs
+  tf2_ros
+)
 add_executable(fixed_frame_tf2_broadcaster src/fixed_frame_tf2_broadcaster.cpp)
 ament_target_dependencies(fixed_frame_tf2_broadcaster
   geometry_msgs
@@ -71,6 +83,10 @@ install(TARGETS
 )
 install(TARGETS
   turtle_tf2_message_broadcaster
+  DESTINATION lib/${PROJECT_NAME}
+)
+install(TARGETS
+  turtle_tf2_message_filter
   DESTINATION lib/${PROJECT_NAME}
 )
 install(TARGETS
